@@ -25,4 +25,24 @@ public class EmployeeController {
        return employeeService.addEmployee(employee);
    }
 
+   @GetMapping("/employees/name/{name}")
+    public List<Employee> getEmployeeByName(@PathVariable String name){
+       return employeeService.getEmployeesByName(name);
+    }
+
+    @GetMapping("/employees/salary")
+    public Employee getTopEmployee(){
+        return employeeService.getEmployeeWithHighestSalary();
+    }
+
+    @GetMapping("/employees/salary/{salary}")
+    public List<Employee> getEmployeesWithSalaryGreaterThan(@PathVariable Double salary) {
+        return employeeService.findEmployeesWithSalaryGreaterThan(salary);
+    }
+
+    @GetMapping("/employees/{pageNo}/{pageSize}")
+    public List<Employee> getEmployeesByPagination(@PathVariable int pageNo, @PathVariable int pageSize) {
+        return employeeService.findEmployeesByPagination(pageNo-1, pageSize);
+    }
+
 }
