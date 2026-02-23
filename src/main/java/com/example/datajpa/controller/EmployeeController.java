@@ -1,6 +1,8 @@
 package com.example.datajpa.controller;
 
 import com.example.datajpa.entity.Employee;
+import com.example.datajpa.projection.EmployeeDTO;
+import com.example.datajpa.projection.EmployeeView;
 import com.example.datajpa.repository.EmployeeRepository;
 import com.example.datajpa.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,8 @@ public class EmployeeController {
    }
 
    @GetMapping("/employees/name/{name}")
-    public List<Employee> getEmployeeByName(@PathVariable String name){
+   public List<EmployeeDTO> getEmployeeByName(@PathVariable String name){
+   //public List<EmployeeView> getEmployeeByName(@PathVariable String name){
        return employeeService.getEmployeesByName(name);
     }
 

@@ -1,6 +1,9 @@
 package com.example.datajpa.service;
 
 import com.example.datajpa.entity.Employee;
+import com.example.datajpa.entity.EmployeeProfile;
+import com.example.datajpa.projection.EmployeeDTO;
+import com.example.datajpa.projection.EmployeeView;
 import com.example.datajpa.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,11 +24,14 @@ public class EmployeeService {
     }
 
     public String addEmployee(Employee employee){
+        EmployeeProfile empProfile = employee.getEmployeeProfile();
+        empProfile.setEmployee(employee);
+        System.out.println(empProfile.getSex() + " " +empProfile.getBloodGroup());
         employeeRepository.save(employee);
         return "Employee added successfully";
     }
-
-    public List<Employee>  getEmployeesByName(String name){
+    //public List<EmployeeView>  getEmployeesByName(String name){
+    public List<EmployeeDTO>  getEmployeesByName(String name){
         return employeeRepository.findByEmployeeName(name);
     }
 

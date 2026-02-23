@@ -2,6 +2,8 @@ package com.example.datajpa.repository;
 
 
 import com.example.datajpa.entity.Employee;
+import com.example.datajpa.projection.EmployeeDTO;
+import com.example.datajpa.projection.EmployeeView;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.NativeQuery;
@@ -14,7 +16,7 @@ import java.util.List;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee,Integer> {
     //Rule findBy + Property
-    List<Employee> findByEmployeeName(String empName);
+    //List<Employee> findByEmployeeName(String empName);
     //Rule get Employee with highest salary
     Employee findFirstByOrderBySalaryDesc();
     // JPQL
@@ -26,5 +28,10 @@ public interface EmployeeRepository extends JpaRepository<Employee,Integer> {
     //Native Query
     @NativeQuery(value="Select * from employees where name = :name")
     List<Employee> findByName(@Param("name") String name);
-
+    // select employeeName, department, salary
+    //DTO based projection
+    @Query(value="Select new com.example.datajpa.projection.EmployeeDTO(e.employeeName, e.email, e.salary) from Employee e where e.employeeName = :name")
+    List<EmployeeDTO> findByEmployeeName(String name);
+    // interface based projection
+    //List<EmployeeView> findByEmployeeName(String name);
 }
