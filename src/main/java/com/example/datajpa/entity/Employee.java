@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @Table(name = "employees")
 @Data
@@ -24,6 +28,23 @@ public class Employee {
     // n+1 problem , I don't want employe profile everytime I call employee,
     // and internally it call employee profile and then employee and in depth..
     // so we need to cascade and fetch type. this solves n+1 problem.
+
+    @OneToMany(mappedBy = "employee",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("employee")
+    private List<Project> projects;
+
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+            name = "employee_skills",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id")
+    )
+    @JsonIgnoreProperties("employees")
+    private Set<Skill> skills = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -71,5 +92,21 @@ public class Employee {
 
     public void setEmployeeProfile(EmployeeProfile employeeProfile) {
         this.employeeProfile = employeeProfile;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+
+   public Set<Skill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
     }
 }

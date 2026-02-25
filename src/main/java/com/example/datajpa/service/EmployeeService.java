@@ -19,14 +19,27 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    // This Execute All Queries
     public List<Employee> getAllEmployees(){
         return employeeRepository.findAll();
     }
 
+    //N+1
+    /*public List<Employee> getAllEmployees()
+    {
+        return employeeRepository.findAllWithEmployee();
+    }*/
+
     public String addEmployee(Employee employee){
-        EmployeeProfile empProfile = employee.getEmployeeProfile();
-        empProfile.setEmployee(employee);
-        System.out.println(empProfile.getSex() + " " +empProfile.getBloodGroup());
+        if(employee.getEmployeeProfile() != null)
+            employee.getEmployeeProfile().setEmployee(employee); // O2O
+
+        if(employee.getProjects() != null)
+            employee.getProjects().forEach(p -> p.setEmployee(employee)); // O2M
+
+        if(employee.getSkills() != null)
+            employee.getSkills().forEach(s -> s.getEmployees().add(employee)); // M2M
+
         employeeRepository.save(employee);
         return "Employee added successfully";
     }

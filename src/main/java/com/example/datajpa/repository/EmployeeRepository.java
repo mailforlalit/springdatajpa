@@ -5,6 +5,7 @@ import com.example.datajpa.entity.Employee;
 import com.example.datajpa.projection.EmployeeDTO;
 import com.example.datajpa.projection.EmployeeView;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
@@ -32,6 +33,12 @@ public interface EmployeeRepository extends JpaRepository<Employee,Integer> {
     //DTO based projection
     @Query(value="Select new com.example.datajpa.projection.EmployeeDTO(e.employeeName, e.email, e.salary) from Employee e where e.employeeName = :name")
     List<EmployeeDTO> findByEmployeeName(String name);
+
+    //N+1 problem
+    @Query(value="SELECT e from Employee e JOIN FETCH e.employeeProfile")
+    List<Employee> findAllWithEmployee();
     // interface based projection
     //List<EmployeeView> findByEmployeeName(String name);
+    @EntityGraph(attributePaths = "employeeProfile")
+    List<Employee> findAll();
 }
